@@ -37,12 +37,12 @@ public class Operations {
 	}
 
 	public void results() {
-		float missRate = (float)miss/(float)preds * 100;
-		
+		float missRate = Math.round((float)miss/(float)preds * 10000) / (float)100;
+
 		System.out.println("OUTPUT");
 		System.out.println("number of predictions:    " + preds);
 		System.out.println("number of mispredictions: " + miss);
-		System.out.printf ("misprediction rate:       %.2f%s", missRate, "%\n");
+		System.out.println("misprediction rate:       " + String.format("%.2f", missRate) + "%");
 		if (sim.equals("smith")) {
 			smith.result();
 		} else if (sim.equals("bimodal")) {
