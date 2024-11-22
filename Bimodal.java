@@ -25,9 +25,11 @@ public class Bimodal {
 		}
 	}
 
-	public int prediction(String branch) {
+	public char prediction(String branch) {
 		int index = getIndex(branch);
-		return counters[index];
+		int counter = counters[index];
+		if (counter < 4) { return 'n'; }
+		else { return 't'; }
 	}
 
 	public void updateCounter(int index, char outcome) {
@@ -42,14 +44,12 @@ public class Bimodal {
 
 	public boolean predict(String branch, char outcome) {
 		// Determine branches index into prediction table
-		char prediction;
 		int index = getIndex(branch);
 		int counter = counters[index];
 		
 		// Make prediction
 		// 	Get counter from table 
-		if (counter < 4) { prediction = 'n'; }
-		else { prediction = 't'; }
+		char prediction = prediction(branch);
 		
 		// Update predictor based on actual outcome
 		// 	Branches counter increments if take, decrements if not

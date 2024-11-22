@@ -17,9 +17,9 @@ public class GShare {
 
 	int getIndex(String adr) {
 		String bitAdr = new BigInteger(adr, 16).toString(2);
-		// System.out.println("Index bits: " + bitAdr + " -> " + bitAdr.substring(bitAdr.length()-(pcBits+1), bitAdr.length()-2));
+		// System.out.println("Index bits: " + bitAdr + " -> " + bitAdr.substring(bitAdr.length()-(pcBits+2), bitAdr.length()-2));
 		return (int)Long.parseLong(bitAdr.substring(
-			bitAdr.length() - (pcBits+1), 
+			bitAdr.length() - (pcBits+2), 
 			bitAdr.length() - 2)
 			, 2) ^ gbhr;
 	}
@@ -34,9 +34,11 @@ public class GShare {
 		}
 	}
 
-	public int prediction(String branch) {
+	public char prediction(String branch) {
 		int index = getIndex(branch);
-		return counters[index];
+		int counter = counters[index];
+		if (counter < 4) { return 'n'; }
+		else { return 't'; }
 	}
 
 	public void updateCounter(int index, char outcome) {
@@ -46,29 +48,27 @@ public class GShare {
 		} else { 
 			counter++; 
 		}
-		updateRegistry(outcome);
 		counters[index] = clamp(counter);
 	}
 
 	public void updateRegistry(char outcome) {
+		// System.out.print(outcome + ": " + Integer.toBinaryString(gbhr) + " -> ");
 		if (outcome == 'n') {
 			gbhr = (gbhr >> 1) | (0 << (historyBits - 1));
 		} else {
 			gbhr = (gbhr >> 1) | (1 << (historyBits - 1));
 		}
+		// System.out.println(Integer.toBinaryString(gbhr));
 	}
 	
 	public boolean predict(String branch, char outcome) {
 		// Determine branches index into prediction table
 		// 	gbhr xor pc bits
-		char prediction;
 		int index = getIndex(branch);
-		int counter = counters[index];
 		
 		// Make prediction
 		// 	Get counter from table 
-		if (counter < 4) { prediction = 'n'; }
-		else { prediction = 't'; }
+		char prediction = prediction(branch);
 		
 		// Update predictor based on actual outcome
 		// 	Branches counter increments if take, decrements if not

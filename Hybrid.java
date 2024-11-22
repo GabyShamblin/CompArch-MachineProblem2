@@ -19,9 +19,9 @@ public class Hybrid {
 
 	int getIndex(String adr) {
 		String bitAdr = new BigInteger(adr, 16).toString(2);
-		// System.out.println("Index bits: " + bitAdr + " -> " + bitAdr.substring(bitAdr.length()-(pcBits+1), bitAdr.length()-2));
+		// System.out.println("Index bits: " + bitAdr + " -> " + bitAdr.substring(bitAdr.length()-(pcBits+2), bitAdr.length()-2));
 		return (int)Long.parseLong(bitAdr.substring(
-			bitAdr.length() - (pcBits+1), 
+			bitAdr.length() - (pcBits+2), 
 			bitAdr.length() - 2)
 			, 2);
 	}
@@ -52,8 +52,8 @@ public class Hybrid {
 	// Update branch chooser based on table in page
 	public boolean predict(String branch, char outcome) {
 		// Obtain a gshare prediction and a bimodal prediction
-		char gsharePred = gshare.prediction(branch) < 1 ? 'n' : 't';
-		char bimodalPred = bimodal.prediction(branch) < 1 ? 'n' : 't';
+		char gsharePred = gshare.prediction(branch);
+		char bimodalPred = bimodal.prediction(branch);
 		// Determine branch's index (bit k+1 to 2)
 		int index = getIndex(branch);
 		int choose = chooser[index];
@@ -82,5 +82,7 @@ public class Hybrid {
 		for (int i = 0; i < chooser.length; i++) {
 			System.out.printf("%-3d %d\n", i, chooser[i]);
 		}
+		gshare.result();
+		bimodal.result();
 	}
 }
