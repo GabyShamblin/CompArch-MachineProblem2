@@ -19,34 +19,6 @@ class sim {
 			System.out.print(argv[i] + " ");
 		}
 		System.out.println();
-
-		// if (sim.equalsIgnoreCase("smith")) {
-		// 	System.out.println("===== Simulator configuration =====");
-		// 	System.out.println("SIMULATOR:             " + sim);
-		// 	System.out.println("BITS:                  " + argv[1]);
-		// 	System.out.println("trace_file:            " + argv[2]);
-		// } else if (sim.equalsIgnoreCase("bimodal")) {
-		// 	System.out.println("===== Simulator configuration =====");
-		// 	System.out.println("SIMULATOR:             " + sim);
-		// 	System.out.println("BITS:                  " + argv[1]);
-		// 	System.out.println("trace_file:            " + argv[2]);
-		// } else if (sim.equalsIgnoreCase("gshare")) {
-		// 	System.out.println("===== Simulator configuration =====");
-		// 	System.out.println("SIMULATOR:             " + sim);
-		// 	System.out.println("PC BITS:               " + argv[1]);
-		// 	System.out.println("GLOBAL BITS:           " + argv[2]);
-		// 	System.out.println("trace_file:            " + argv[3]);
-		// } else if (sim.equalsIgnoreCase("hybrid")) {
-		// 	System.out.println("===== Simulator configuration =====");
-		// 	System.out.println("SIMULATOR:             " + sim);
-		// 	System.out.println("PC CHOOSER BITS:       " + argv[1]);
-		// 	System.out.println("PC BITS:               " + argv[2]);
-		// 	System.out.println("GLOBAL BITS:           " + argv[3]);
-		// 	System.out.println("PC BIMODAL BITS:       " + argv[4]);
-		// 	System.out.println("trace_file:            " + argv[5]);
-		// } else {
-		// 	throw new IllegalArgumentException("Invalid sim (" + argv[0] + ")");
-		// }
 	}
 	
 	static void readOperations(String line, int count) {
@@ -65,26 +37,30 @@ class sim {
 		printInput(args);
 		
 		if (sim.equalsIgnoreCase("smith")) {
-			b = Integer.parseInt(args[1]);
+			ops = new Operations(sim, Integer.parseInt(args[1]));
 			trace = args[2];
 		} else if (sim.equalsIgnoreCase("bimodal")) {
-			m1 = Integer.parseInt(args[1]);
+			ops = new Operations(sim, Integer.parseInt(args[1]));
 			trace = args[2];
 		} else if (sim.equalsIgnoreCase("gshare")) {
-			m1 = Integer.parseInt(args[1]);
-			n = Integer.parseInt(args[2]);
+			// If n == 0, use bimodal branch instead
+			if (Integer.parseInt(args[2]) == 0) {
+				ops = new Operations("bimodal", Integer.parseInt(args[1]));
+			} else {
+				ops = new Operations(sim, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+			}
 			trace = args[3];
 		} else if (sim.equalsIgnoreCase("hybrid")) {
 			k = Integer.parseInt(args[1]);
 			m1 = Integer.parseInt(args[2]);
 			n = Integer.parseInt(args[3]);
 			m2 = Integer.parseInt(args[4]);
+			ops = new Operations(sim, k, m1, n, m2);
 			trace = args[5];
 		} else {
 			throw new IllegalArgumentException("Invalid sim (" + args[0] + ")");
 		}
 
-		ops = new Operations(sim, Integer.parseInt(args[1]));
 
 		try {
 			File input = new File(trace);

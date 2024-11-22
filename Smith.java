@@ -3,19 +3,12 @@ public class Smith {
 	int max = 0;
 
 	public Smith(int b) {
-		if (b == 1) {
-			counter = 1;
-			max = 1;
-		} else if (b == 2) {
-			counter = 2;
-			max = 3;
-		} else if (b == 3) {
-			counter = 4;
-			max = 7;
-		} else if (b == 4) {
-			counter = 8;
-			max = 15;
+		String bits = "1";
+		for (int i = 1; i < b; i++) {
+			bits += "1";
 		}
+		max = Integer.parseInt(bits, 2);
+		counter = (int)Math.ceil(max/(float)2);
 	}
 
 	public int clamp(int counter) {

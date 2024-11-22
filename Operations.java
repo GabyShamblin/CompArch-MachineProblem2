@@ -12,6 +12,8 @@ public class Operations {
 
 	Smith smith;
 	Bimodal bimodal;
+	GShare gshare;
+	Hybrid hybrid;
 
 	public Operations(String sim, int bits) {
 		this.sim = sim.toLowerCase();
@@ -22,6 +24,16 @@ public class Operations {
 		}
 	}
 
+	public Operations(String sim, int pcBits, int branchBits) {
+		this.sim = sim.toLowerCase();
+		gshare = new GShare(pcBits, branchBits);
+	}
+
+	public Operations(String sim, int k, int m1, int n, int m2) {
+		this.sim = sim.toLowerCase();
+		hybrid = new Hybrid(k, m1, n, m2);
+	}
+
 	public void run(String branch, char outcome) {
 		if (sim.equals("smith")) {
 			if (!smith.predict(outcome)) {
@@ -30,6 +42,16 @@ public class Operations {
 			preds++;
 		} else if (sim.equals("bimodal")) {
 			if (!bimodal.predict(branch, outcome)) {
+				miss++;
+			}
+			preds++;
+		} else if (sim.equals("gshare")) {
+			if (!gshare.predict(branch, outcome)) {
+				miss++;
+			}
+			preds++;
+		} else if (sim.equals("hybrid")) {
+			if (!hybrid.predict(branch, outcome)) {
 				miss++;
 			}
 			preds++;
@@ -47,6 +69,10 @@ public class Operations {
 			smith.result();
 		} else if (sim.equals("bimodal")) {
 			bimodal.result();
+		} else if (sim.equals("gshare")) {
+			gshare.result();
+		} else if (sim.equals("hybrid")) {
+			hybrid.result();
 		}
 	}
 }
